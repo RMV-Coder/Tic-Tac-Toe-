@@ -56,7 +56,7 @@ int computerMatch(int *play) //Function for the player versus computer mode
                 score = playerScore;
             }
         } while(win==FALSE);
-        if (win = TRUE)
+        if (win == TRUE)
         {
             entPlaying = TRUE;
         }
