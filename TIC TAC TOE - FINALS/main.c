@@ -22,7 +22,7 @@ int playWith() //Function for the game mode
     scanf("%i", &mode);// We'll expect a 1 or 2 from the user.
     return mode;
 }
-int computerMatch(int *play) //Function for the player versus computer mode
+int computerMatch(int *play, int *max_score) //Function for the player versus computer mode
 {
     *play = 1;
     int playerScore=0;
@@ -32,7 +32,7 @@ int computerMatch(int *play) //Function for the player versus computer mode
     int entPlaying = *play;
     modeAI = TRUE;
     int winner;
-    while(score != 10)// without this while loop, the game will end after 1 win or tie.
+    while(score != *max_score)// without this while loop, the game will end after 1 win or tie.
     {
         win=FALSE;
         for(int i = 0; i<9; i++)// This for loop will reset the array everytime we get a winner or a tie. In other words, remove the X's and O's from the grid.
@@ -58,20 +58,20 @@ int computerMatch(int *play) //Function for the player versus computer mode
         } while(win==FALSE);
         if (win == TRUE)
         {
-            entPlaying = TRUE;
+            entPlaying = TRUE;//player 1 will be always first turn
         }
     }
-    if(playerScore  == 10)
+    if(playerScore  == *max_score)
     {
         winner = 1;
     }
-    else if(computerScore  == 10)
+    else if(computerScore  == *max_score)
     {
         winner = 2;
     }
     return winner;
 }
-int friendlyMatch(int *player) //Function for the player versus player mode
+int friendlyMatch(int *player, int *max_score) //Function for the player versus player mode
 {
     *player = 1;
     int p1Score=0;
@@ -80,7 +80,7 @@ int friendlyMatch(int *player) //Function for the player versus player mode
     int tieCounter=0;
     int p = *player;
     int winner;
-    while(score != 10)// without this while loop, the game will end after 1 win or tie.
+    while(score != *max_score)// without this while loop, the game will end after 1 win or tie.
     {
         win=FALSE;
         for(int i = 0; i<9; i++)// This for loop will reset the array everytime we get a winner or a tie. In other words, remove the X's and O's from the grid.
@@ -104,11 +104,11 @@ int friendlyMatch(int *player) //Function for the player versus player mode
             }
         } while(win==FALSE);
     }
-    if(p1Score  == 10)
+    if(p1Score  == *max_score)
     {
         winner = 1;
     }
-    else if(p2Score  == 10)
+    else if(p2Score  == *max_score)
     {
         winner = 2;
     }
@@ -1939,7 +1939,7 @@ int calculationsAI(int *done) //Function that will analyze what move the compute
                 break;
             }
         }
-    }while(*done = FALSE);
+    }while(*done == FALSE);
     d = TRUE;
     return d;
 }
@@ -2126,24 +2126,35 @@ int frame() //Function that will process the grid and its contents
     printf("\t\t\t\t\t\t\t%c       %c\n",179,179);// 179 printed through a %c will give an output to an ASCII character, vertical line/s in this case.
     return 0;
 }
+
+int maxScore()
+{
+    int setLimit = 0, response = 0;
+    system("cls");//clear screen. Used to refresh console.
+    printf("\n\n\n\n\n\n\t\t\t\tWinner will be the first one to reach a score of: ");//Prompt
+    scanf("%i", &setLimit);
+
+    return abs(setLimit);
+}
 int main()
 {
-    int gameMode, gm = FALSE, a;
+    int gameMode, gm = FALSE, a, limit;
     system("color 70");//Change background color to white, and text to black --- 7 for white, 0 for black
     mainMenu();
     getch();
     while(gm == FALSE)// we'll have a loop until the condition becomes gm!=FALSE
     {
         gameMode = playWith();// the int gameMode will have the returned value of the function playWith().
+        limit = maxScore();
         if(gameMode == 1)
         {
-            a = friendlyMatch(&player);
+            a = friendlyMatch(&player, &limit);
             printf("\n\t\tPlayer %i won!", a);
             gm = TRUE;// set int gm to TRUE which is defined with the value of 1, which means gm = 1. We do this to break out from the while loop.
         }
         else if(gameMode == 2)
         {
-            a = computerMatch(&player);
+            a = computerMatch(&player, &limit);
             if(a == 1)
             {
                 printf("\n\t\t\t\tYou won!");
