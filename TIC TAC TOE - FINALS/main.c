@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <time.h>
+#include <unistd.h>
 #define SIZE 9
 #define TRUE 1
 #define FALSE 0
@@ -43,7 +45,7 @@ int computerMatch(int *play, int *max_score) //Function for the player versus co
         {
             frame();// call this function to refresh and display the grid and current strings within our array(X or O).
             logConsole(&entPlaying, &playerScore, &computerScore, &tieCount, &modeAI);
-            selectCellComputer(&entPlaying);// player input function for either player or computer.
+            selectCellComputer(&entPlaying, &playerScore, &computerScore, &tieCount);// player input function for either player or computer.
             frame();// call this function again before checking for a winner.
             checkForWinner(&playerScore, &computerScore, &tieCount);// Call this function to check for a winner.
             frame();
@@ -1943,7 +1945,7 @@ int calculationsAI(int *done) //Function that will analyze what move the compute
     d = TRUE;
     return d;
 }
-int selectCellPlayer(int *player) //Function that will process moves of both players
+void selectCellPlayer(int *player) //Function that will process moves of both players
 {
     int turn = TRUE;
     int cell = 0;
@@ -1986,9 +1988,9 @@ int selectCellPlayer(int *player) //Function that will process moves of both pla
             }
         }
     }
-    return turn;
+    //return turn;
 }
-int selectCellComputer(int *player) //Function that will process moves of both computer and player
+void selectCellComputer(int *player, int *pScore, int *comScore, int *tieCount) //Function that will process moves of both computer and player
 {
     int turn = TRUE;
     int cell = 0;
@@ -1998,6 +2000,7 @@ int selectCellComputer(int *player) //Function that will process moves of both c
     {
         if(*player == 1)
         {
+            printf("\n\n\t\t\t\tYour move: ");// To know who's turn it is.
             scanf("%i", &opt);// We'll expect a number from the current player. (1 to 9) are the expected values.
             if(opt >= 1 && opt <= 9)
             {
@@ -2031,29 +2034,46 @@ int selectCellComputer(int *player) //Function that will process moves of both c
         }
         else if(*player==2)//if computer's turn.
         {
+            frame();
+            int pS = *pScore, cS = *comScore, tC = *tieCount;
+            scoreBoard(&pS, &cS, &tC);
+            printf("\n\n\t\t\t\tComputer is thinking...");
             int g = calculationsAI(&done);
+            float msec = 3 * (rand() % 3);
+            sleep(msec);
             *player-= g;
             turn = FALSE;
         }
 
     }
-    return turn;
+    //return turn;
+}
+void scoreBoard(int *p1, int *p2, int *t)
+{
+    printf("\n\t\t\t\tSCOREBOARD:\n\t\t\t\tPlayer(X): %i\tComputer(O): %i\tTie: %i", *p1, *p2, *t);
 }
 void logConsole(int *playing, int *p1, int *p2, int *t, int *humanAI) //Function that will display the scoreboard and guide on how to play the game
 {
     int cpu = *humanAI;
     if(cpu == TRUE)//Console log for Computer vs Human
     {
-        printf("\n\t\t\t\tSCOREBOARD:\n\t\t\t\tPlayer(X): %i\tComputer(O): %i\tTie: %i", *p1, *p2, *t);// Console log for scoreboard.
         if(*playing == 1)
         {
-            printf("\n\n\t\t\t\tHOW TO PLAY:");
-            printf("\n\t\t\t\tEnter");
-            printf("\n\t\t\t\t1 for top-left\t\t2 for top-mid\t\t3 for top-right");
-            printf("\n\t\t\t\t4 for left\t\t5 for mid\t\t6 for right");
-            printf("\n\t\t\t\t7 for bottom-left\t8 for bottom-mid\t9 for bottom-right");
+            printf("\n\t\t\t\tSCOREBOARD:\n\t\t\t\tPlayer(X): %i\tComputer(O): %i\tTie: %i", *p1, *p2, *t);// Console log for scoreboard.
+        }
+        printf("\n\n\t\t\t\tHOW TO PLAY:");
+        printf("\n\t\t\t\tEnter");
+        printf("\n\t\t\t\t1 for top-left\t\t2 for top-mid\t\t3 for top-right");
+        printf("\n\t\t\t\t4 for left\t\t5 for mid\t\t6 for right");
+        printf("\n\t\t\t\t7 for bottom-left\t8 for bottom-mid\t9 for bottom-right");
+        /*if(*playing == 1)
+        {
             printf("\n\n\t\t\t\tYour turn...");// To know who's turn it is.
         }
+        if(*playing == 2)
+        {
+            printf("\n\n\t\t\t\tComputer's turn...");// To know who's turn it is.
+        }*/
 
     }
     else //Console log for Player 1 vs Player 2
@@ -2138,6 +2158,7 @@ int maxScore()
 }
 int main()
 {
+    srand(getpid() + time(NULL));
     int gameMode, gm = FALSE, a, limit;
     system("color 70");//Change background color to white, and text to black --- 7 for white, 0 for black
     mainMenu();
