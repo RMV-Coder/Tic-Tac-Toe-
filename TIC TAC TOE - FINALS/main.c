@@ -1989,7 +1989,6 @@ void selectCellPlayer(int *player) //Function that will process moves of both pl
             }
         }
     }
-    //return turn;
 }
 void selectCellComputer(int *player, int *pScore, int *comScore, int *tieCount) //Function that will process moves of both computer and player
 {
@@ -2040,14 +2039,13 @@ void selectCellComputer(int *player, int *pScore, int *comScore, int *tieCount) 
             scoreBoard(&pS, &cS, &tC);
             printf("\n\n\t\t\t\tComputer is thinking...");
             int g = calculationsAI(&done);
-            float msec = 3 * (rand() % 3);
+            float msec = 2 * (rand() % 3);
             sleep(msec);
             *player-= g;
             turn = FALSE;
         }
 
     }
-    //return turn;
 }
 void scoreBoard(int *p1, int *p2, int *t)
 {
@@ -2067,15 +2065,6 @@ void logConsole(int *playing, int *p1, int *p2, int *t, int *humanAI) //Function
         printf("\n\t\t\t\t1 for top-left\t\t2 for top-mid\t\t3 for top-right");
         printf("\n\t\t\t\t4 for left\t\t5 for mid\t\t6 for right");
         printf("\n\t\t\t\t7 for bottom-left\t8 for bottom-mid\t9 for bottom-right");
-        /*if(*playing == 1)
-        {
-            printf("\n\n\t\t\t\tYour turn...");// To know who's turn it is.
-        }
-        if(*playing == 2)
-        {
-            printf("\n\n\t\t\t\tComputer's turn...");// To know who's turn it is.
-        }*/
-
     }
     else //Console log for Player 1 vs Player 2
     {
