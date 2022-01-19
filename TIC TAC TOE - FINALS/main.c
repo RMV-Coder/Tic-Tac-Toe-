@@ -12,6 +12,7 @@ int win = FALSE;
 int player, modeAI;
 void mainMenu() //Function for the main menu screen
 {
+    system("cls");
     printf("\n\n\n\n\n\n\t\t\t\t\t\t     TIC TAC TOE\n\n");
     printf("\t\t\t\t\t      Use 1 to 9 to select a cell.\n");
     printf("\t\t\t\t\t      Press any key to start...");
@@ -2156,42 +2157,68 @@ int maxScore()
 
     return abs(setLimit);
 }
+int playAgain()
+{
+    char ans[5];
+    system("cls");
+    printf("\n\n\t\t\tPlay again?[YES/NO]: ");
+    scanf("%s", ans);
+    if(strcmp(ans,"YES") == 0)
+    {
+        return 1;
+    }
+    else if(strcmp(ans,"NO") == 0)
+    {
+        return 2;
+    }
+    return 0;
+}
 int main()
 {
     srand(getpid() + time(NULL));
-    int gameMode, gm = FALSE, a, limit;
-    system("color 70");//Change background color to white, and text to black --- 7 for white, 0 for black
-    mainMenu();
-    getch();
-    while(gm == FALSE)// we'll have a loop until the condition becomes gm!=FALSE
+    int play = 0;
+    do
     {
-        gameMode = playWith();// the int gameMode will have the returned value of the function playWith().
-        limit = maxScore();
-        if(gameMode == 1)
+        int gameMode, gm = FALSE, a, limit;
+        system("color 70");//Change background color to white, and text to black --- 7 for white, 0 for black
+        mainMenu();
+        getch();
+        while(gm == FALSE)// we'll have a loop until the condition becomes gm!=FALSE
         {
-            a = friendlyMatch(&player, &limit);
-            printf("\n\t\tPlayer %i won!", a);
-            gm = TRUE;// set int gm to TRUE which is defined with the value of 1, which means gm = 1. We do this to break out from the while loop.
-        }
-        else if(gameMode == 2)
-        {
-            a = computerMatch(&player, &limit);
-            if(a == 1)
+            gameMode = playWith();// the int gameMode will have the returned value of the function playWith().
+            limit = maxScore();
+            if(gameMode == 1)
             {
-                printf("\n\t\t\t\tYou won!");
+                a = friendlyMatch(&player, &limit);
+                printf("\n\t\tPlayer %i won!", a);
+                gm = TRUE;// set int gm to TRUE which is defined with the value of 1, which means gm = 1. We do this to break out from the while loop.
             }
-            else if(a == 2)
+            else if(gameMode == 2)
             {
-                printf("\n\t\t\t\tComputer won!");
+                a = computerMatch(&player, &limit);
+                if(a == 1)
+                {
+                    printf("\n\t\t\t\tYou won!");
+                }
+                else if(a == 2)
+                {
+                    printf("\n\t\t\t\tComputer won!");
+                }
+                gm = TRUE;// set int gm to TRUE which is defined with the value of 1, which means gm = 1. We do this to break out from the while loop.
             }
-            gm = TRUE;// set int gm to TRUE which is defined with the value of 1, which means gm = 1. We do this to break out from the while loop.
+            else
+            {
+                printf("\n\tIncorrect input.");
+                gm = FALSE;// we will stay inside the while loop until the user provides a valid input.
+            }
         }
-        else
+        getch();
+        while(play == 0)
         {
-            printf("\n\tIncorrect input.");
-            gm = FALSE;// we will stay inside the while loop until the user provides a valid input.
+            play = playAgain();
         }
-    }
-    getch();
+    }while(play != 2);
+    system("cls");
+    printf("\n\nThank you for playing our game!\n\n");
     return 0;
 }
