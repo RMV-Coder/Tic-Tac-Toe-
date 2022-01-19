@@ -14,7 +14,6 @@ void mainMenu() //Function for the main menu screen
 {
     system("cls");
     printf("\n\n\n\n\n\n\t\t\t\t\t\t     TIC TAC TOE\n\n");
-    printf("\t\t\t\t\t      Use 1 to 9 to select a cell.\n");
     printf("\t\t\t\t\t      Press any key to start...");
 }
 int playWith() //Function for the game mode
